@@ -148,7 +148,7 @@ def get_glove_dict(txt_dir):
 
 def readTxt(file_name):
     class_list = list()
-    wnids = open(file_name, 'rU')
+    wnids = open(file_name, 'r')
     try:
         for line in wnids:
             line = line[:-1]
@@ -165,7 +165,7 @@ def load_class():
 
 def loadDict(file_name):
     entities = list()
-    wnids = open(file_name, 'rU')
+    wnids = open(file_name, 'r')
     try:
         for line in wnids:
             line = line[:-1]

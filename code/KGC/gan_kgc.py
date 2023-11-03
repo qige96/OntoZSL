@@ -174,8 +174,9 @@ class Trainer(object):
             embeddings.append(list(np.zeros((rel_embed.shape[1],))))
             embeddings = np.array(embeddings)
 
-
-
+            tmp_save_path = os.path.join(self.data_path, self.trained_embed_path)
+            if not os.path.exists(tmp_save_path):
+                os.makedirs(tmp_save_path)
             np.savez(os.path.join(self.data_path, self.trained_embed_path, self.embed_model+'_'+self.splitname), embeddings)
 
             json.dump(symbol_id, open(os.path.join(self.data_path, self.trained_embed_path, self.embed_model + '2id'+'_'+self.splitname), 'w'))
@@ -258,7 +259,7 @@ class Trainer(object):
 
     def pretrain_Extractor(self):
         print('\n##PRETRAINING FEATURE EXTRACTOR ....')
-        # self.ensure_path(self.save_path)
+        self.ensure_path(self.save_path)
 
         pretrain_losses = deque([], 100)
 

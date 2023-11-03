@@ -5,6 +5,7 @@ import pickle
 import codecs
 
 from nltk.corpus import stopwords
+import sklearn
 from sklearn.feature_extraction.text import TfidfTransformer, TfidfVectorizer
 
 
@@ -120,7 +121,10 @@ def calculate_tfidf(ent_list, corpus, word2id):
     tfidf_vec = TfidfVectorizer(stop_words=stopwords.words('english'))
     # transformer=TfidfTransformer(stop_words=stopwords.words('english'))
     tfidf = tfidf_vec.fit_transform(corpus)
-    word = tfidf_vec.get_feature_names()  # list, num of words
+    if sklearn.__version__ > '1.2':
+        word = tfidf_vec.get_feature_names_out()  # list, num of words
+    else:
+        word = tfidf_vec.get_feature_names()  # list, num of words
     weight = tfidf.toarray()  # (181, num of words)
     weight = weight.astype('float32')
 

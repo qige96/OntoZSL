@@ -1,4 +1,5 @@
 # numpy data L2 nomarlization
+import argparse
 import os
 import json
 import sys
@@ -9,7 +10,7 @@ import scipy.io as scio
 
 def readTxt(file_name):
     class_list = list()
-    wnids = open(file_name, 'rU')
+    wnids = open(file_name, 'r')
     try:
         for line in wnids:
             line = line[:-1]
@@ -24,7 +25,7 @@ def readTxt(file_name):
 
 def loadDict(file_name):
     entities = list()
-    wnids = open(file_name, 'rU')
+    wnids = open(file_name, 'r')
     try:
         for line in wnids:
             line = line[:-1]
@@ -35,14 +36,18 @@ def loadDict(file_name):
     print(len(entities))
     return entities
 
-
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--datadir', default='../../data')
+    parser.add_argument('--dataset', default='NELL')
+    return parser.parse_args()
 
 if __name__ == '__main__':
-
-    datadir = '../../data'
     
-    # dataset = 'AwA'
-    dataset = 'ImageNet/ImNet_A'
+    args = parse_args()
+    datadir = args.datadir
+    dataset = args.dataset
+
 
     DATASET_DIR = os.path.join(datadir, dataset)
     DATA_DIR = os.path.join(datadir, dataset, 'onto_file')
@@ -62,8 +67,13 @@ if __name__ == '__main__':
 
     embed_dir = os.path.join(DATA_DIR, 'save_onto_embeds')
 
-    ent_embed_file = embed_dir + '/entity_55000.npy'
-    rel_embed_file = embed_dir + '/relation_55000.npy'
+    def _find_max_ckpt(dirpath, prefix):
+        '''return the file name "entity_(d+).npy" with the max  steps'''
+        ckpts = [i for i in os.listdir(dirpath) if i.startswith(prefix)]
+        return max(ckpts) 
+
+    ent_embed_file = embed_dir + os.sep + _find_max_ckpt(embed_dir, 'entity_')
+    rel_embed_file = embed_dir + os.sep +  _find_max_ckpt(embed_dir, 'relation_')
 
     ent_embeds = np.load(ent_embed_file)
     print(ent_embeds.shape)
